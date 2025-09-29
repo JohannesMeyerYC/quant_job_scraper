@@ -1,0 +1,10 @@
+# Virtual Environment
+venv/
+.venv/
+# Generated output/data
+output/
+# Python compiled files
+__pycache__/
+*.pyc
+# Playwright
+.playwright
