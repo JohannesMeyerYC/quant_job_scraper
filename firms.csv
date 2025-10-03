@@ -1,172 +1,65 @@
 firm_name,url,platform_type
-Alan,https://boards.greenhouse.io/alan,greenhouse_standard
-GitLab,https://boards.greenhouse.io/gitlab,greenhouse_standard
 Renaissance Technologies,https://www.rentec.com/careers,custom_site
 Two Sigma,https://www.twosigma.com/careers/open-roles,playwright
 Citadel,https://www.citadel.com/careers/open-opportunities,custom_site
 Jane Street,https://www.janestreet.com/join-jane-street/open-roles,custom_site
 D.E. Shaw,https://www.deshaw.com/careers,custom_site
-AQR Capital,https://www.aqr.com/Careers,custom_site
-Millennium Management,https://careers.mlp.com/jobs,custom_site
-Point72,https://www.point72.com/careers,custom_site
 WorldQuant,https://www.worldquant.com/careers/open-roles,playwright
 Citadel Securities,https://www.citadelsecurities.com/careers,custom_site
 Optiver,https://www.optiver.com/working-at-optiver/career-opportunities,playwright
-Susquehanna International Group,https://careers.sig.com/home,custom_site
 Jump Trading,https://www.jumptrading.com/careers,custom_site
-Hudson River Trading,https://boards.greenhouse.io/hudsonrivertrading,greenhouse_standard
-Tower Research,https://www.tower-research.com/careers,custom_site
-DRW Trading,https://drw.com/careers,custom_site
 Virtu Financial,https://www.virtu.com/careers,custom_site
 Quantlab,https://www.quantlab.com/careers,custom_site
 IMC Trading,https://www.imc.com/us/careers,custom_site
-Headlands Technologies,https://www.headlandstech.com/careers,custom_site
 Flow Traders,https://www.flowtraders.com/careers/jobs,playwright
-HAP Capital,https://www.hapcapital.com/careers,custom_site
 Akuna Capital,https://www.akunacapital.com/careers,custom_site
-Alpha Simplex,https://www.alphasimplex.com/careers,custom_site
 Acadian Asset Management,https://www.acadian-asset.com/Careers,custom_site
-Panagora,https://www.panagora.com/careers,custom_site
-Capula,https://www.capulafp.com/careers,custom_site
 3Red Partners,https://www.3redgroup.com/careers,custom_site
 Apriori Investments,https://www.apriori.com/careers,custom_site
-Alphagrep,https://alphagrep.com/careers,custom_site
-Alphataraxia Management,https://www.alphataraxia.com/careers,custom_site
-Alyeska Investment Group,https://www.alyeska.com/careers,custom_site
-Ansatz Capital,https://www.ansatzcapital.com/careers,custom_site
 GSA Capital,https://www.gsacapital.com/careers,custom_site
 Quadeye Securities,https://www.quadeye.com/careers,custom_site
-Graviton Research Capital,https://www.graviton.in/careers,custom_site
 I-Rage,https://www.iragecapital.com/careers,custom_site
-Dolat Group,https://dolatcapital.com/careers,custom_site
 Goldman Sachs,https://www.goldmansachs.com/careers,custom_site
 Morgan Stanley,https://www.morganstanley.com/careers,custom_site
 Barclays,https://home.barclays/careers,custom_site
 Deutsche Bank,https://www.db.com/careers,custom_site
 UBS,https://www.ubs.com/global/en/careers,playwright
-Credit Suisse,https://www.credit-suisse.com/careers,custom_site
-JP Morgan,https://jobs.jpmorganchase.com,custom_site
 Bank of America,https://careers.bankofamerica.com,custom_site
-Nomura,https://www.nomura.com/careers,custom_site
 Macquarie,https://www.macquarie.com/careers,custom_site
-BNP Paribas,https://group.bnpparibas/en/careers,custom_site
 Société Générale,https://careers.societegenerale.com,custom_site
 RBC Capital Markets,https://jobs.rbc.com/rbccapitalmarkets,custom_site
 Citi,https://jobs.citi.com,custom_site
 Wells Fargo,https://www.wellsfargo.com/about/careers,custom_site
-PIMCO,https://www.pimco.com/en-us/careers,custom_site
 BlackRock,https://careers.blackrock.com,custom_site
-Vanguard,https://careers.vanguard.com,custom_site
-Fidelity Investments,https://jobs.fidelity.com,custom_site
-Tudor Investment Corp,https://www.tudor.com/careers,custom_site
-Transmarket Group,https://www.transmarketgroup.com/careers,custom_site
-Old Mission Capital,https://www.oldmissioncapital.com/careers,custom_site
-Five Rings,https://www.5rings.com/careers,custom_site
-Radix Trading,https://www.radixtrading.com/careers,custom_site
-Volant Trading,https://www.volanttrading.com/careers,custom_site
-Kronos Research,https://www.kronosresearch.com/careers,custom_site
-Ginkgo Trading,https://www.ginkgotrading.com/careers,custom_site
-Sunrise Capital,https://www.sunrisecapital.com/careers,custom_site
 Belvedere Trading,https://www.belvederetrading.com/careers,custom_site
-DL Trading,https://www.dltrading.com/careers,custom_site
-Kalshi,https://www.kalshi.com/careers,custom_site
-Arcadian Asset Management,https://www.arcadianasset.com/careers,custom_site
-GTS,https://www.gts.com/careers,custom_site
-Mako Trading,https://www.makotrading.com/vacancies,custom_site
-Esteemed Advisors,https://www.esteemedadvisors.com/careers,custom_site
-Maven Securities,https://www.maven-securities.com/careers,custom_site
-Eclipse Trading,https://eclipsetrading.com/careers,custom_site
-Algorithmic Trading Group,https://www.atgchicago.com/careers,custom_site
-Cboe Global Markets,https://www.cboe.com/careers,custom_site
-Balyasny Asset Management,https://boards.greenhouse.io/balyasnyassetmanagement,greenhouse_standard
-Square,https://www.squareup.com/careers/jobs,custom_site
-Stripe,https://boards.greenhouse.io/stripe,greenhouse_standard
-Robinhood,https://boards.greenhouse.io/robinhood,greenhouse_standard
-Venmo,https://www.paypal.com/us/webapps/mpp/careers,custom_site
-Cash App,https://cash.app/careers,custom_site
-Block,https://careers.block.xyz/jobs,custom_site
-Inspira Financial,https://www.inspirafinancial.com/careers,custom_site
-Pinwheel,https://www.pinwheelapi.com/careers,custom_site
-Chime,https://www.chime.com/careers/open-roles,custom_site
-Coinbase,https://www.coinbase.com/careers/open-roles,playwright
-Plaid,https://plaid.com/careers,custom_site
-Brex,https://jobs.lever.co/brex,custom_site
-Affirm,https://www.affirm.com/careers,custom_site
-SoFi,https://www.sofi.com/careers,custom_site
-Adyen,https://www.adyen.com/careers,custom_site
-Verition Fund Management,https://www.veritionfund.com/careers,custom_site
-Man Group,https://www.man.com/careers,custom_site
-Bridgewater Associates,https://www.bridgewater.com/careers,custom_site
-Point State Capital,https://www.pointstate.com/careers,custom_site
-Schonfeld Strategic Advisors,https://schonfeld.com/careers,custom_site
-Winton Group,https://www.winton.com/careers,custom_site
-Cairn Capital,https://www.cairncapital.com/careers,custom_site
 Quantedge Capital,https://www.quantedge.com/careers,custom_site
 Squarepoint Capital,https://www.squarepoint-capital.com/careers,playwright
-OxFORD Asset Management,https://www.oxford-asset.com/careers,custom_site
 XTX Markets,https://www.xtxmarkets.com/careers,custom_site
-Spot Trading,https://www.spottrading.com/careers,custom_site
-Flowdesk,https://www.flowdesk.co/careers,custom_site
-QuantConnect,https://www.quantconnect.com/jobs,custom_site
-Cubist Systematic Strategies,https://www.cubistsystematic.com/careers,custom_site
-Seven Eight Capital,https://www.seveneightcapital.com/careers,custom_site
-ExodusPoint Capital,https://www.exoduspoint.com/careers,custom_site
 Sculptor Capital Management,https://www.sculptor.com/careers,custom_site
-Lazard,https://www.hl.com/careers,custom_site
 Jefferies,https://www.jefferies.com/careers,custom_site
-Credit Agricole CIB,https://www.credit-agricole.com/en/careers,custom_site
 Mizuho,https://www.mizuhogroup.com/careers,custom_site
-MUFG,https://www.mufg.jp/careers,custom_site
-CIBC,https://www.cibc.com/en/careers,custom_site
 BMO Capital Markets,https://jobs.bmo.com/capitalmarkets,custom_site
-TD Securities,https://www.tdsecurities.com/careers,custom_site
-NatWest Group,https://www.natwestgroup.com/careers,custom_site
 Standard Chartered,https://www.sc.com/en/careers,custom_site
-State Street,https://www.statestreet.com/en/careers,custom_site
 Northern Trust,https://www.northerntrust.com/about-us/careers,custom_site
-Nubank,https://nubank.gupy.io,custom_site
-Revolut,https://www.revolut.com/careers,custom_site
 NerdWallet,https://www.nerdwallet.com/careers,custom_site
 Intuit,https://careers.intuit.com,custom_site
 Tala,https://tala.co/careers,custom_site
 Checkout.com,https://www.checkout.com/careers,custom_site
 Klarna,https://www.klarna.com/careers,custom_site
-Ramp,https://jobs.lever.co/ramp,custom_site
-Mio,https://boards.greenhouse.io/mio,greenhouse_standard
 Chicago Trading Company (CTC),https://www.chicagotrading.com/careers,custom_site
 PDT Partners,https://www.pdtpartners.com/careers,custom_site
-G-Research,https://www.g-research.co.uk/careers,custom_site
-Trexquant,https://www.trexquant.com/careers,custom_site
-Arrowstreet Capital,https://www.arrowstreetcapital.com/careers,custom_site
-Garda Capital Partners,https://www.gardacapital.com/careers,custom_site
 Wolverine Trading,https://www.wolve.com/careers,custom_site
-Gelber Group,https://www.gelbergroup.com/careers,custom_site
-Tradebot Systems,https://www.tradebot.com/careers,custom_site
-Trillium,https://www.trillium.com/careers,custom_site
 Viking Global Investors,https://www.vikingglobal.com/careers,custom_site
-Tiger Global Management,https://www.tigerglobal.com/careers,custom_site
-Coatue Management,https://www.coatue.com/careers,custom_site
 Farallon Capital Management,https://www.faralloncapital.com/careers,custom_site
-Davidson Kempner Capital Management,https://www.dkpartners.com/careers,custom_site
-Caxton Associates,https://www.caxton.com/careers,custom_site
-ClearAlpha,https://www.clearalpha.com/careers,custom_site
-Consolidated Trading,https://www.consolidatedtrading.com/careers,custom_site
-CQS,https://www.cqs.com/careers,custom_site
-DV Trading,https://www.dvtrading.com/careers,custom_site
-Edgehog Trading,https://www.edgehogtrading.com/careers,custom_site
-Edgestream Partners,https://www.edgestream.com/careers,custom_site
-Eisler Capital,https://www.eislercapital.com/careers,custom_site
-Engineers Gate,https://www.engineersgate.com/careers,custom_site
-Brevan Howard,https://www.brevanhoward.com/careers,custom_site
 KKR,https://www.kkr.com/careers/career-opportunities,custom_site
-The Carlyle Group,https://www.carlyle.com/careers,custom_site
-T. Rowe Price,https://www.troweprice.com/personal-investing/about-us/careers,custom_site
 Charles Schwab,https://www.schwabjobs.com/search-jobs,custom_site
-BNY Mellon,https://jobs.bnymellon.com,custom_site
 Discover Financial Services,https://www.discover.com/company/careers,custom_site
 Capital One,https://www.capitalonecareers.com,custom_site
-Addepar,https://jobs.lever.co/addepar,custom_site
-Betterment,https://www.betterment.com/careers,custom_site
 Wealthfront,https://www.wealthfront.com/careers,custom_site
 Circle,https://www.circle.com/careers,custom_site
-Xapo Bank,https://www.xapo.com/careers,custom_site
+Coinbase,https://www.coinbase.com/careers/open-roles,playwright
+Plaid,https://plaid.com/careers,custom_site
+Affirm,https://www.affirm.com/careers,custom_site
+Adyen,https://www.adyen.com/careers,custom_site
+Man Group,https://www.man.com/careers,custom_site
+Bridgewater Associates,https://www.bridgewater.com/careers,custom_site

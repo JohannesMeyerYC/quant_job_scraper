@@ -53,6 +53,43 @@ def get_firm_list(csv_filename: str = 'firms.csv') -> List[FirmConfig]:
         logging.error(f"An unexpected error occurred while reading the firm CSV: {e}")
         return []
 
+def validate_job_data(jobs_data: List[JobData]) -> List[JobData]:
+    valid_jobs: List[JobData] = []
+    dropped_count = 0
+    
+    unique_jobs = set()
+
+    for job in jobs_data:
+        
+        firm = job.get('firm', '').strip()
+        title = job.get('title', '').strip()
+        link = job.get('link', '').strip()
+        location = job.get('location', '').strip()
+        
+        if not (firm and title and link):
+            logging.warning(f"Dropping job: Missing core fields (firm, title, or link). Data: {job}")
+            dropped_count += 1
+            continue
+            
+        if not (link.startswith('http://') or link.startswith('https://')):
+            logging.warning(f"Dropping job: Invalid link format. Link: {link}")
+            dropped_count += 1
+            continue
+
+        unique_key = (firm.lower(), title.lower(), location.lower())
+        if unique_key in unique_jobs:
+            logging.debug(f"Dropping job: Duplicate entry found. Firm: {firm}, Title: {title}")
+            dropped_count += 1
+            continue
+
+        valid_jobs.append(job)
+        unique_jobs.add(unique_key)
+
+    if dropped_count > 0:
+        logging.info(f"Job validation complete. Dropped {dropped_count} jobs (missing fields or duplicates).")
+        
+    return valid_jobs
+
 def export_to_excel(jobs_data: List[JobData], filename: str = "output/jobs.xlsx"):
     if not jobs_data:
         logging.warning("No job data collected. Skipping Excel export.")

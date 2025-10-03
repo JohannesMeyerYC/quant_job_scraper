@@ -4,7 +4,7 @@ import logging
 from typing import List, Dict
 import time
 from urllib.parse import urljoin, urlparse
-from ..config import HEADERS
+from config import HEADERS
 
 JobData = Dict[str, str]
 

@@ -21,11 +21,7 @@ def get_random_headers():
         'DNT': '1'
     }
 
-HEADERS = get_random_headers()
-
 REQUESTS_TIMEOUT = 20
-
-PLAYWRIGHT_TIMEOUT_MS = 30000
 
 REQUESTS_CONCURRENCY_DELAY = (1.0, 3.0)
 
