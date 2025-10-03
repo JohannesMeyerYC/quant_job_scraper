@@ -7,10 +7,11 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from datetime import datetime
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 
 JobData = Dict[str, str]
 FirmConfig = Dict[str, str]
@@ -98,7 +99,6 @@ def export_to_excel(jobs_data: List[JobData], filename: str = "output/jobs.xlsx"
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # DataFrame setup
         df = pd.DataFrame(jobs_data)
         for col in ['firm', 'title', 'location', 'link']:
             if col not in df.columns:
@@ -107,7 +107,6 @@ def export_to_excel(jobs_data: List[JobData], filename: str = "output/jobs.xlsx"
         df.columns = ['Firm', 'Job Title', 'Location', 'Link']
         df = df.sort_values(by=['Firm', 'Job Title']).reset_index(drop=True)
 
-        # --- Excel export ---
         wb = Workbook()
         ws = wb.active
         ws.title = "Scraped Jobs"
@@ -132,45 +131,82 @@ def export_to_excel(jobs_data: List[JobData], filename: str = "output/jobs.xlsx"
         wb.save(filename)
         logging.info(f"Excel exported to {filename}")
 
-        # --- PDF export ---
         pdf_filename = filename.replace('.xlsx', '.pdf')
-        doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+        
+        PAGE_WIDTH, PAGE_HEIGHT = A4
+        LEFT_MARGIN = 0.5 * inch
+        RIGHT_MARGIN = 0.5 * inch
+        TABLE_WIDTH = PAGE_WIDTH - LEFT_MARGIN - RIGHT_MARGIN
+
+        doc = SimpleDocTemplate(
+            pdf_filename, 
+            pagesize=A4, 
+            leftMargin=LEFT_MARGIN,
+            rightMargin=RIGHT_MARGIN
+        )
         elements = []
 
         styles = getSampleStyleSheet()
+        cell_style = ParagraphStyle(
+            name='CellText',
+            parent=styles['Normal'],
+            fontName='Helvetica',
+            fontSize=8,
+            leading=10,
+        )
         link_style = ParagraphStyle(
             name='LinkStyle',
-            parent=styles['BodyText'],
-            fontName='Helvetica',
-            fontSize=10,
+            parent=cell_style,
             textColor=colors.blue,
-            underline=True
+            underline=False
         )
+        title_style = styles['Title']
+        title_style.alignment = 1
 
-        elements.append(Paragraph("Scraped Job Listings", styles['Title']))
-        elements.append(Spacer(1, 12))
+        elements.append(Paragraph("Scraped Job Listings", title_style))
+        elements.append(Paragraph(f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
+        elements.append(Spacer(1, 18))
 
-        pdf_data = [df.columns.tolist()]
-        for _, row in df.iterrows():
+        col_widths = [
+            TABLE_WIDTH * 0.15, 
+            TABLE_WIDTH * 0.35, 
+            TABLE_WIDTH * 0.20, 
+            TABLE_WIDTH * 0.30
+        ]
+        
+        PDF_COLUMNS = ['Firm', 'Job Title', 'Location', 'Link']
+        
+        pdf_data = [PDF_COLUMNS] 
+        for _, row in df[PDF_COLUMNS].iterrows(): 
             pdf_row = []
-            for col_name in df.columns:
+            for col_name in PDF_COLUMNS: 
                 val = str(row[col_name]) if row[col_name] else ''
                 if col_name == 'Link' and val.startswith(('http://', 'https://')):
-                    pdf_row.append(Paragraph(f'<a href="{val}">{val}</a>', link_style))
+                    paragraph = Paragraph(f'<a href="{val}">{val}</a>', link_style)
+                    pdf_row.append(paragraph)
                 else:
-                    pdf_row.append(Paragraph(val, styles['BodyText']))
+                    pdf_row.append(Paragraph(val, cell_style))
             pdf_data.append(pdf_row)
 
-        table = Table(pdf_data, repeatRows=1)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        table = Table(pdf_data, colWidths=col_widths, repeatRows=1) 
+        
+        style_commands = [
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2a4f6d')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 12),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.black)
-        ]))
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+            ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dddddd')),
+        ]
+
+        for i in range(1, len(pdf_data)):
+            if i % 2 == 0:
+                style_commands.append(('BACKGROUND', (0, i), (-1, i), colors.HexColor('#f5f5f5')))
+
+        table.setStyle(TableStyle(style_commands))
 
         elements.append(table)
         doc.build(elements)

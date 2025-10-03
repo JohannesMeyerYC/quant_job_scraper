@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 JobData = Dict[str, str]
 FirmConfig = Dict[str, str]
 
-async def run_scrapers(firm_list: List[FirmConfig]) -> List[JobData]:
+async def run_scrapers(firm_list: List[FirmConfig], use_playwright: bool) -> List[JobData]:
     all_jobs: List[JobData] = []
 
     sync_tasks: List[asyncio.Future] = []
@@ -39,10 +39,13 @@ async def run_scrapers(firm_list: List[FirmConfig]) -> List[JobData]:
             sync_tasks.append(task)
             sync_firm_map[len(sync_tasks) - 1] = firm_data
         elif platform_type == 'playwright':
-            if firm_name in PLAYWRIGHT_CONFIGS:
-                initial_async_firms.append(playwright_data)
+            if use_playwright:
+                if firm_name in PLAYWRIGHT_CONFIGS:
+                    initial_async_firms.append(playwright_data)
+                else:
+                    logging.warning(f"-> Skipping {firm_name}: Playwright requested but config missing in PLAYWRIGHT_CONFIGS.")
             else:
-                logging.warning(f"-> Skipping {firm_name}: Playwright requested but config missing in PLAYWRIGHT_CONFIGS.")
+                logging.info(f"-> Skipping {firm_name}: Playwright requested but user chose HTML-only mode.")
         else:
             logging.warning(f"-> Skipping {firm_name}: Unknown platform_type '{platform_type}'.")
 
@@ -64,7 +67,7 @@ async def run_scrapers(firm_list: List[FirmConfig]) -> List[JobData]:
                 if isinstance(result, Exception):
                     logging.error(f"Error in requests scraper for {firm_name} ({firm_data['type']}): {type(result).__name__} - {result}")
                 elif isinstance(result, list):
-                    if not result and firm_data['type'] == 'custom_site' and firm_name in PLAYWRIGHT_CONFIGS:
+                    if use_playwright and not result and firm_data['type'] == 'custom_site' and firm_name in PLAYWRIGHT_CONFIGS:
                         logging.info(f"FALLBACK: Triggering Playwright for {firm_name} (Generic scraper found 0 jobs).")
                         fallback_async_firms.append({'firm': firm_name})
                     elif result:
@@ -74,20 +77,23 @@ async def run_scrapers(firm_list: List[FirmConfig]) -> List[JobData]:
         except Exception as e:
              logging.error(f"Critical error during synchronous task gathering: {e}")
 
-    de_duplicated_initial_firms = list({firm['firm']: firm for firm in initial_async_firms}.values())
-    
-    final_async_firms_dict = {firm['firm']: firm for firm in de_duplicated_initial_firms + fallback_async_firms}
-    
-    final_async_firms = list(final_async_firms_dict.values())
+    if use_playwright:
+        de_duplicated_initial_firms = list({firm['firm']: firm for firm in initial_async_firms}.values())
+
+        final_async_firms_dict = {firm['firm']: firm for firm in de_duplicated_initial_firms + fallback_async_firms}
+
+        final_async_firms = list(final_async_firms_dict.values())
 
 
-    if final_async_firms:
-        logging.info(f"\nScheduling Playwright scrapers ({len(de_duplicated_initial_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
-        try:
-            async_results: List[JobData] = await run_playwright_scrapers(final_async_firms)
-            all_jobs.extend(async_results)
-        except Exception as e:
-            logging.error(f"Critical failure during Playwright execution: {type(e).__name__} - {e}")
+        if final_async_firms:
+            logging.info(f"\nScheduling Playwright scrapers ({len(de_duplicated_initial_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
+            try:
+                async_results: List[JobData] = await run_playwright_scrapers(final_async_firms)
+                all_jobs.extend(async_results)
+            except Exception as e:
+                logging.error(f"Critical failure during Playwright execution: {type(e).__name__} - {e}")
+    else:
+        logging.info("\nSkipping Playwright scraping as per user's request (HTML-only mode).")
 
     return all_jobs
 
@@ -102,8 +108,28 @@ async def main():
         logging.info("No valid firms to scrape. Exiting.")
         return
 
+    use_playwright_mode = False
+    while True:
+        choice = input(
+            "\nSelect Scraping Mode:\n"
+            "  1. HTML-only (Requests/Greenhouse scrapers only)\n"
+            "  2. Playwright-enabled (Includes HTML + Headless Browser)\n"
+            "Enter your choice (1 or 2): "
+        ).strip()
+
+        if choice == '2':
+            print("-> Running in **Playwright-enabled** mode.")
+            use_playwright_mode = True
+            break
+        elif choice == '1':
+            print("-> Running in **HTML-only** mode.")
+            use_playwright_mode = False
+            break
+        else:
+            print("Invalid choice. Please enter '1' for HTML-only or '2' for Playwright-enabled.")
+
     try:
-        all_jobs = await run_scrapers(firms_to_scrape)
+        all_jobs = await run_scrapers(firms_to_scrape, use_playwright_mode)
 
         if all_jobs:
             logging.info(f"\nScraping finished. Found a total of {len(all_jobs)} unique jobs.")
