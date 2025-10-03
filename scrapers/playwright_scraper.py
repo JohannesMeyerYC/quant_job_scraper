@@ -141,36 +141,42 @@ async def run_playwright_scrapers(firms_to_run: List[Dict[str, Any]]) -> List[Jo
         logging.critical(f"Error during Playwright config import: {e}")
         return []
 
+    unique_firms_dict = {firm['firm']: firm for firm in firms_to_run if 'firm' in firm}
+    unique_firms = list(unique_firms_dict.values())
 
     async with async_playwright() as p:
         tasks = []
         MAX_PLAYWRIGHT_TASK_TIME = 90
-        for firm_data in firms_to_run:
+
+        for firm_data in unique_firms:
             firm_name = firm_data.get('firm')
             if not firm_name:
                 continue
-                
-            config = PLAYWRIGHT_CONFIGS.get(firm_name)
 
-            if config:
-                async def timed_scrape():
-                    try:
-                        async with timeout(MAX_PLAYWRIGHT_TASK_TIME):
-                            return await scrape_firm_playwright(
-                                firm_name=firm_name,
-                                url=config["url"], 
-                                job_card_selector=config["job_card_selector"],
-                                title_selector=config["title_selector"],
-                                location_selector=config["location_selector"],
-                                p=p
-                            )
-                    except asyncio.TimeoutError:
-                        logging.error(f"Critical Timeout: The entire Playwright task for {firm_name} exceeded the {MAX_PLAYWRIGHT_TASK_TIME} second limit.")
-                        return []
-                    
-                tasks.append(timed_scrape())
-            else:
+            config = PLAYWRIGHT_CONFIGS.get(firm_name)
+            if not config:
                 logging.warning(f"Error: Playwright firm '{firm_name}' was passed but config is missing. Skipping.")
+                continue
+
+            async def timed_scrape(firm_name=firm_name, config=config):
+                try:
+                    async with timeout(MAX_PLAYWRIGHT_TASK_TIME):
+                        return await scrape_firm_playwright(
+                            firm_name=firm_name,
+                            url=config["url"],
+                            job_card_selector=config["job_card_selector"],
+                            title_selector=config["title_selector"],
+                            location_selector=config["location_selector"],
+                            p=p
+                        )
+                except asyncio.TimeoutError:
+                    logging.error(f"Critical Timeout: The entire Playwright task for {firm_name} exceeded the {MAX_PLAYWRIGHT_TASK_TIME} second limit.")
+                    return []
+                except Exception as e:
+                    logging.error(f"Unexpected error during scraping {firm_name}: {e}")
+                    return []
+
+            tasks.append(timed_scrape())
 
         logging.info(f"Running {len(tasks)} Playwright scraping tasks concurrently...")
 
