@@ -48,7 +48,7 @@ async def scrape_firm_playwright(
         await page.goto(url, wait_until="load", timeout=30000)
         await asyncio.sleep(random.uniform(2, 4))
 
-        await page.wait_for_selector(job_card_selector, state="visible", timeout=10000)
+        await page.wait_for_selector(job_card_selector, state="visible", timeout=15000) 
 
         job_card_locators = await page.locator(job_card_selector).all()
 
@@ -81,10 +81,11 @@ async def scrape_firm_playwright(
                 if location_selector:
                     try:
                         location_element = card_locator.locator(location_selector).first
-                        location = (await location_element.inner_text()).strip()
+                        location = (await location_element.all_inner_texts())[0].strip() if await location_element.count() > 0 else "N/A"
+                        location = location.replace('Location', '').replace(':', '').strip()
                     except PlaywrightError:
                         pass
-
+                
                 link = urljoin(url, job_url)
 
                 title_clean = title.strip().replace('\n', ' ')
@@ -96,7 +97,7 @@ async def scrape_firm_playwright(
                 scraped_jobs.append({
                     "firm": firm_name.capitalize(),
                     "title": title_clean,
-                    "location": location.strip(),
+                    "location": location.strip() or "N/A",
                     "link": link
                 })
 
@@ -129,16 +130,30 @@ async def run_playwright_scrapers(firms_to_run: List[Dict[str, Any]]) -> List[Jo
     if not firms_to_run:
         return all_results
 
+    try:
+        from config import PLAYWRIGHT_CONFIGS
+        globals()['PLAYWRIGHT_CONFIGS'] = PLAYWRIGHT_CONFIGS
+    except ImportError:
+        logging.critical("Could not import PLAYWRIGHT_CONFIGS from config.py. Playwright scrapers cannot run.")
+        return []
+    except Exception as e:
+        logging.critical(f"Error during Playwright config import: {e}")
+        return []
+
+
     async with async_playwright() as p:
         tasks = []
         for firm_data in firms_to_run:
-            firm_name = firm_data['firm']
+            firm_name = firm_data.get('firm')
+            if not firm_name:
+                continue
+                
             config = PLAYWRIGHT_CONFIGS.get(firm_name)
 
             if config:
                 task = scrape_firm_playwright(
                     firm_name=firm_name,
-                    url=config.get("url", firm_data.get("url")),
+                    url=config["url"], 
                     job_card_selector=config["job_card_selector"],
                     title_selector=config["title_selector"],
                     location_selector=config["location_selector"],
@@ -146,7 +161,7 @@ async def run_playwright_scrapers(firms_to_run: List[Dict[str, Any]]) -> List[Jo
                 )
                 tasks.append(task)
             else:
-                logging.warning(f"Error: Playwright firm '{firm_name}' had a configuration issue. Skipping.")
+                logging.warning(f"Error: Playwright firm '{firm_name}' was passed but config is missing. Skipping.")
 
         logging.info(f"Running {len(tasks)} Playwright scraping tasks concurrently...")
 
