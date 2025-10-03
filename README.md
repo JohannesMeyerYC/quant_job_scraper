@@ -1,10 +1,10 @@
-# 🤖 Configurable Quantitative Job Market Scraper
+#  Configurable Quantitative Job Market Scraper
 
 This project is an advanced, configuration-driven web scraping tool designed to efficiently aggregate open job listings from the career pages of various high-frequency trading firms, quantitative funds, leading banks, and fintech companies. It uses a mixed synchronous/asynchronous architecture for speed, robustness, and responsible resource management.
 
 ***
 
-## 🎯 Purpose and Mission
+##  Purpose and Mission
 
 The primary goal of this tool is to provide **market transparency** and **data centralization** for individuals navigating the competitive financial and deep-tech job markets.
 
@@ -14,7 +14,7 @@ The primary goal of this tool is to provide **market transparency** and **data c
 
 ***
 
-## 🛠️ Architecture and Technology Stack
+##  Architecture and Technology Stack
 
 The scraper employs a layered approach to maximize success rates and resource efficiency:
 
@@ -27,7 +27,7 @@ The scraper employs a layered approach to maximize success rates and resource ef
 
 ***
 
-## ⚙️ Configuration
+##  Configuration
 
 All firms and site-specific scraping rules are managed through two central files.
 
@@ -55,7 +55,7 @@ This file holds global settings and all firm-specific CSS selectors required for
 
 ***
 
-## 🚀 Quick Start Guide
+##  Quick Start Guide
 
 ### Prerequisites
 
@@ -93,7 +93,7 @@ The file includes columns for **Firm**, **Job Title**, **Location**, and **Link*
 
 ---
 
-# 🛡️ Robustness and Error Handling
+#  Robustness and Error Handling
 
 The system is designed to handle errors gracefully and non-critically, ensuring the entire job list is scraped even if individual sites fail:
 
