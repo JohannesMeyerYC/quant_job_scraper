@@ -65,7 +65,7 @@ You need **Python 3.8+** installed.
 # Clone the repository
 git clone [https://github.com/JohannesMeyerYC/quant_job_scraper.git](https://github.com/JohannesMeyerYC/quant_job_scraper.git)
 cd quant_job_scraper
-
+```
 # Set up the environment
 python -m venv venv
 source venv/bin/activate    # On Windows: .\venv\Scripts\activate
@@ -80,7 +80,7 @@ Ensure your `firms.csv` file is configured correctly, then execute the main scri
 
 ```bash
 python main.py
-
+```
 # Output
 
 The final, cleaned, and styled output is generated in Excel format:
