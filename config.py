@@ -32,38 +32,43 @@ PROXIES = {}
 
 PLAYWRIGHT_CONFIGS = {
     "Jane Street": {
-        "url": "https://www.janestreet.com/join-us/opportunities/all/",
-        "job_card_selector": "li.opportunity-listing",
-        "title_selector": "h3",
-        "location_selector": "p.location",
+        "url": "https://www.janestreet.com/join-jane-street/open-roles/?type=experienced-candidates&location=all-locations",
+        "job_card_selector": "a[href*='/join-jane-street/position/']",
+        "title_selector": "div.item.experienced.position p",
+        "location_selector": "div.item.experienced.city p",
+        "link_selector": "a.job-card__link",
         "requires_interaction": False 
     },
     "Jump Trading": {
-        "url": "https://www.jumptrading.com/open-roles/",
-        "job_card_selector": "div.role-card",
-        "title_selector": "h2",
-        "location_selector": "div.role-location",
-        "requires_interaction": True 
+        "url": "https://www.jumptrading.com/careers/",
+        "job_card_selector": "div[gw-jobs-item].jobs-item",
+        "title_selector": "div[gw-jobs-title].job-title",
+        "location_selector": "div[gw-jobs-location].jobs-location",
+        "link_selector": "a[gw-jobs-apply]",
+        "requires_interaction": False 
     },
     "D.E. Shaw": {
         "url": "https://www.deshaw.com/careers/openings",
-        "job_card_selector": "a.job-listing-item",
-        "title_selector": "h2",
-        "location_selector": "span.job-location",
+        "job_card_selector": "div.job",
+        "title_selector": "span.job-display-name",
+        "location_selector": "span.location",
+        "link_selector": "a.parent-arrow-long",
         "requires_interaction": False
     },
     "IMC Trading": {
         "url": "https://careers.imc.com/global/en/job-search-results",
-        "job_card_selector": "li.jobs-list-item",
-        "title_selector": "h3",
-        "location_selector": "span.job-location-text",
+        "job_card_selector": "div.flquq3c.guttko3._1bpr8a70",
+        "title_selector": "h2._13fp8yk6c.dzswju0.dzswjuc.ryl3ea0.ajj7g52._1e5s7rk1",
+        "location_selector": "div.flquq3c._1bpr8a79._1bpr8a71x._1ydk4la1 > span._13fp8yk6c.dzswju0.dzswju5",
+        "link_selector": "a.flquq39._1uzkw7i2f._1h19okt75._1h19okt0._2tzmed7._2tzmed0._2tzmed2.ajj7g51._1e5s7rk0",
         "requires_interaction": False
     },
     "Citadel": {
         "url": "https://www.citadel.com/careers/open-opportunities/",
-        "job_card_selector": "div[data-ph-id*='job-listing-item']", 
-        "title_selector": "h2",
-        "location_selector": "div:text('Location')",
+        "job_card_selector": "a.careers-listing-card", 
+        "link_selector": "a.careers-listing-card",
+        "title_selector": "h2", 
+        "location_selector": "span.careers-listing-card__location",
         "requires_interaction": True
     },
     "Two Sigma": {

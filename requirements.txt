@@ -3,3 +3,4 @@ requests
 beautifulsoup4
 pandas
 openpyxl
+reportlab

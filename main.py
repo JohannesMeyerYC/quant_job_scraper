@@ -7,7 +7,15 @@ from scrapers.requests_scraper import scrape_greenhouse_standard, scrape_custom_
 from scrapers.playwright_scraper import run_playwright_scrapers
 from utils.file_handler import get_firm_list, export_to_excel
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+BOLD = '\033[1m'
+GREEN = '\033[92m'
+BLUE = '\033[94m'
+YELLOW = '\033[93m'
+CYAN = '\033[96m'
+RED = '\033[91m'
+ENDC = '\033[0m'
+
+logging.basicConfig(level=logging.INFO, format=f'{YELLOW}[%(levelname)s]{ENDC} %(message)s')
 
 JobData = Dict[str, str]
 FirmConfig = Dict[str, str]
@@ -49,7 +57,7 @@ async def run_scrapers(firm_list: List[FirmConfig], use_playwright: bool) -> Lis
         else:
             logging.warning(f"-> Skipping {firm_name}: Unknown platform_type '{platform_type}'.")
 
-    logging.info(f"\nScheduling {len(sync_tasks)} synchronous scrapers (Greenhouse/Generic)...")
+    logging.info(f"\n{BOLD}SCHEDULE:{ENDC} Scheduling {len(sync_tasks)} synchronous scrapers (Greenhouse/Generic)...")
     fallback_async_firms: List[Dict[str, str]] = []
 
     if sync_tasks:
@@ -68,7 +76,7 @@ async def run_scrapers(firm_list: List[FirmConfig], use_playwright: bool) -> Lis
                     logging.error(f"Error in requests scraper for {firm_name} ({firm_data['type']}): {type(result).__name__} - {result}")
                 elif isinstance(result, list):
                     if use_playwright and not result and firm_data['type'] == 'custom_site' and firm_name in PLAYWRIGHT_CONFIGS:
-                        logging.info(f"FALLBACK: Triggering Playwright for {firm_name} (Generic scraper found 0 jobs).")
+                        logging.info(f"{YELLOW}FALLBACK:{ENDC} Triggering Playwright for {firm_name} (Generic scraper found 0 jobs).")
                         fallback_async_firms.append({'firm': firm_name})
                     elif result:
                         all_jobs.extend(result)
@@ -86,64 +94,85 @@ async def run_scrapers(firm_list: List[FirmConfig], use_playwright: bool) -> Lis
 
 
         if final_async_firms:
-            logging.info(f"\nScheduling Playwright scrapers ({len(de_duplicated_initial_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
+            logging.info(f"\n{BOLD}SCHEDULE:{ENDC} Scheduling {len(final_async_firms)} Playwright scrapers ({len(de_duplicated_initial_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
             try:
                 async_results: List[JobData] = await run_playwright_scrapers(final_async_firms)
                 all_jobs.extend(async_results)
             except Exception as e:
                 logging.error(f"Critical failure during Playwright execution: {type(e).__name__} - {e}")
     else:
-        logging.info("\nSkipping Playwright scraping as per user's request (HTML-only mode).")
+        logging.info("\n{BLUE}INFO:{ENDC} Skipping Playwright scraping as per user's request (HTML-only mode).")
 
     return all_jobs
 
+
 async def main():
+    print(f"\n{BOLD}{CYAN}╔═══════════════════════════════════════════╗{ENDC}")
+    print(f"{CYAN}║{ENDC}      {BOLD}🚀 Job Scraper - Initialization{ENDC}      {CYAN}║{ENDC}")
+    print(f"{CYAN}╚═══════════════════════════════════════════╝{ENDC}\n")
+
     try:
         firms_to_scrape = get_firm_list()
+        total_firms = len(firms_to_scrape)
+        print(f"{BLUE}✅ Configuration loaded!{ENDC} Found {BOLD}{total_firms}{ENDC} firms to check.")
     except Exception as e:
+        print(f"{RED}❌ CRITICAL ERROR:{ENDC} Failed to load firm list. Cannot proceed.")
         logging.critical(f"Failed to load firm list: {e}. Cannot proceed.")
         return
 
     if not firms_to_scrape:
-        logging.info("No valid firms to scrape. Exiting.")
+        print(f"{YELLOW}⚠️ WARNING:{ENDC} No valid firms to scrape. Exiting.")
         return
 
     use_playwright_mode = False
+    print(f"\n{BOLD}--- MODE SELECTION ---{ENDC}")
     while True:
         choice = input(
-            "\nSelect Scraping Mode:\n"
-            "  1. HTML-only (Requests/Greenhouse scrapers only)\n"
-            "  2. Playwright-enabled (Includes HTML + Headless Browser)\n"
-            "Enter your choice (1 or 2): "
-        ).strip()
+            f"{BOLD}Choose a Scraping Mode:{ENDC}\n"
+            f"  {BOLD}1. HTML-only{ENDC} (Fast, basic Request scrapers)\n"
+            f"  {BOLD}{GREEN}2. Playwright-enabled (Recommended){ENDC} (Includes browser rendering for modern sites like Citadel/IMC)\n"
+            f"{BOLD}Enter your choice (default is 2):{ENDC} "
+        ).strip() or '2'
 
         if choice == '2':
-            print("-> Running in **Playwright-enabled** mode.")
+            print(f"{CYAN}⚙️ MODE SET:{ENDC} Running in {BOLD}Playwright-enabled{ENDC} mode.")
             use_playwright_mode = True
             break
         elif choice == '1':
-            print("-> Running in **HTML-only** mode.")
+            print(f"{CYAN}⚙️ MODE SET:{ENDC} Running in {BOLD}HTML-only{ENDC} mode.")
             use_playwright_mode = False
             break
         else:
-            print("Invalid choice. Please enter '1' for HTML-only or '2' for Playwright-enabled.")
+            print(f"{RED}🚫 Invalid choice.{ENDC} Please enter '1' for HTML-only or '2' for Playwright-enabled.")
+            
+    print(f"\n{BOLD}{CYAN}═" * 45 + ENDC)
+    print(f"{BOLD}STARTING SCRAPING PROCESS...{ENDC}")
+    print(f"{BOLD}{CYAN}═" * 45 + ENDC)
 
     try:
         all_jobs = await run_scrapers(firms_to_scrape, use_playwright_mode)
-
+        
+        print(f"\n{BOLD}{GREEN}╔═══════════════════════════════════════════╗{ENDC}")
         if all_jobs:
-            logging.info(f"\nScraping finished. Found a total of {len(all_jobs)} unique jobs.")
+            job_count = len(all_jobs)
+            print(f"{GREEN}║{ENDC}  {BOLD}🎉 Scraping Finished Successfully!{ENDC}  {GREEN}║{ENDC}")
+            print(f"{GREEN}║{ENDC}  Total Jobs Found: {BOLD}{job_count:<20}{ENDC}{GREEN}║{ENDC}")
+            print(f"{GREEN}║{ENDC}  Data Exported to: {BOLD}jobs_data.xlsx{ENDC}{GREEN}║{ENDC}")
             export_to_excel(all_jobs)
         else:
-            logging.info("\nScraping finished with no results.")
+            print(f"{YELLOW}║{ENDC}  {BOLD}⚠️ Scraping Finished: No Jobs Found.{ENDC} {YELLOW}║{ENDC}")
+        print(f"{BOLD}{GREEN}╚═══════════════════════════════════════════╝{ENDC}\n")
+
 
     except Exception as e:
+        print(f"\n{RED}❌ CRITICAL FAILURE:{ENDC} A fatal error occurred during the main scraping run.")
         logging.critical(f"A fatal error occurred during the main scraping run: {e}")
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logging.warning("Scraping process interrupted by user (Ctrl+C). Exiting gracefully.")
+        print(f"\n{YELLOW}⚠️ Interrupted by user (Ctrl+C). Exiting gracefully.{ENDC}")
     except Exception as e:
+        print(f"\n{RED}❌ UNHANDLED FATAL ERROR:{ENDC} Check logs for details.")
         logging.critical(f"An unhandled fatal error occurred: {e}")

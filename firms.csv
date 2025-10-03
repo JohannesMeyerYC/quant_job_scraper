@@ -58,6 +58,11 @@ Capital One,https://www.capitalonecareers.com,custom_site
 Wealthfront,https://www.wealthfront.com/careers,custom_site
 Circle,https://www.circle.com/careers,custom_site
 Coinbase,https://www.coinbase.com/careers/open-roles,playwright
+Jane Street,https://www.janestreet.com/join-jane-street/open-roles/?type=experienced-candidates&location=all-locations,BeautifulSoup
+Jump Trading,https://www.jumptrading.com/careers/,BeautifulSoup
+D.E. Shaw,https://www.deshaw.com/careers/openings,BeautifulSoup
+IMC Trading,https://careers.imc.com/global/en/job-search-results,playwright
+Citadel,https://www.citadel.com/careers/open-opportunities/,playwright
 Plaid,https://plaid.com/careers,custom_site
 Affirm,https://www.affirm.com/careers,custom_site
 Adyen,https://www.adyen.com/careers,custom_site
