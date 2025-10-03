@@ -74,10 +74,13 @@ async def run_scrapers(firm_list: List[FirmConfig]) -> List[JobData]:
         except Exception as e:
              logging.error(f"Critical error during synchronous task gathering: {e}")
 
-    final_async_firms: List[Dict[str, str]] = initial_async_firms + fallback_async_firms
+    unique_playwright_firms = {firm['firm']: firm for firm in initial_async_firms}.values()
+    final_initial_async_firms = list(unique_playwright_firms)
+
+    final_async_firms: List[Dict[str, str]] = final_initial_async_firms + fallback_async_firms
 
     if final_async_firms:
-        logging.info(f"\nScheduling Playwright scrapers ({len(initial_async_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
+        logging.info(f"\nScheduling Playwright scrapers ({len(final_initial_async_firms)} initial, {len(fallback_async_firms)} fallbacks)...")
         try:
             async_results: List[JobData] = await run_playwright_scrapers(final_async_firms)
             all_jobs.extend(async_results)
