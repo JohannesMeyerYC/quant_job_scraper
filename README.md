@@ -66,14 +66,16 @@ You need **Python 3.8+** installed.
 git clone [https://github.com/JohannesMeyerYC/quant_job_scraper.git](https://github.com/JohannesMeyerYC/quant_job_scraper.git)
 cd quant_job_scraper
 ```
+```bash
 # Set up the environment
 python -m venv venv
 source venv/bin/activate    # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
-
+```
+```bash
 # Install Playwright browser drivers (required for the 'playwright' strategy)
 playwright install
-
+```
 # Running the Scraper
 
 Ensure your `firms.csv` file is configured correctly, then execute the main script:
