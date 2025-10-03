@@ -4,6 +4,7 @@ import logging
 from typing import List, Dict, Any
 import random
 from urllib.parse import urljoin, urlparse
+from asyncio import timeout
 
 PLAYWRIGHT_CONFIGS = {}
 
@@ -45,10 +46,10 @@ async def scrape_firm_playwright(
     try:
         context, page = await __create_browser_page(p)
 
-        await page.goto(url, wait_until="load", timeout=30000)
+        await page.goto(url, wait_until="load", timeout=60000)
         await asyncio.sleep(random.uniform(2, 4))
 
-        await page.wait_for_selector(job_card_selector, state="visible", timeout=15000) 
+        await page.wait_for_selector(job_card_selector, state="visible", timeout=30000) 
 
         job_card_locators = await page.locator(job_card_selector).all()
 
@@ -143,6 +144,7 @@ async def run_playwright_scrapers(firms_to_run: List[Dict[str, Any]]) -> List[Jo
 
     async with async_playwright() as p:
         tasks = []
+        MAX_PLAYWRIGHT_TASK_TIME = 90
         for firm_data in firms_to_run:
             firm_name = firm_data.get('firm')
             if not firm_name:
@@ -151,15 +153,22 @@ async def run_playwright_scrapers(firms_to_run: List[Dict[str, Any]]) -> List[Jo
             config = PLAYWRIGHT_CONFIGS.get(firm_name)
 
             if config:
-                task = scrape_firm_playwright(
-                    firm_name=firm_name,
-                    url=config["url"], 
-                    job_card_selector=config["job_card_selector"],
-                    title_selector=config["title_selector"],
-                    location_selector=config["location_selector"],
-                    p=p
-                )
-                tasks.append(task)
+                async def timed_scrape():
+                    try:
+                        async with timeout(MAX_PLAYWRIGHT_TASK_TIME):
+                            return await scrape_firm_playwright(
+                                firm_name=firm_name,
+                                url=config["url"], 
+                                job_card_selector=config["job_card_selector"],
+                                title_selector=config["title_selector"],
+                                location_selector=config["location_selector"],
+                                p=p
+                            )
+                    except asyncio.TimeoutError:
+                        logging.error(f"Critical Timeout: The entire Playwright task for {firm_name} exceeded the {MAX_PLAYWRIGHT_TASK_TIME} second limit.")
+                        return []
+                    
+                tasks.append(timed_scrape())
             else:
                 logging.warning(f"Error: Playwright firm '{firm_name}' was passed but config is missing. Skipping.")
 
